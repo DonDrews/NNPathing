@@ -1,15 +1,16 @@
 import MultiNEAT as NEAT
 import gui.render as rn
+import main.unit as un
+import main.map as mp
 
 window = rn.Window()
 params = NEAT.Parameters()
 params.PopulationSize = 100
 #INPUTS:
-#0 bias
-#1-4 distance to walls in cardinal directions
-#5 x distance to goal
-#6 y distance to goal
-#7 directrion to goal
+#0-3 distance to walls in cardinal directions
+#4 x distance to goal
+#5 y distance to goal
+#6 directrion to goal
 
 #OUTPUTS
 #0 x movement
@@ -21,9 +22,21 @@ pop = NEAT.Population(genome, params, True, 1.0)
 def simGeneration():
 	genomeList = NEAT.GetGenomeList(pop)
 
+	#make graph
+	graph = mp.Map(20, 20)
+
 	for g in genomeList:
-		fitness = evaluate(g)
+		net = NEAT.NeuralNetwork()
+		g.BuildPhenotype(net)
+		fitness = evaluate(net, graph)
 		g.SetFitness(fitness)
 
 	pop.Epoch()
 	
+def evaluate(net, graph):
+	#make unit
+	u = un.Unit(net, graph.start)
+
+	while !u.simulate(graph):
+		#todo: render window
+		sleep(0.1)

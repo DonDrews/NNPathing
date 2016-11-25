@@ -31,6 +31,17 @@ class Map:
 		for o in self.obstacles:
 			o.addToRaster(self.raster)
 
+		#pick goal and start
+		self.start = self.pickSidePoint(False)
+		self.goal = self.pickSidePoint(True)
+
+	def pickSidePoint(self, isGoal):
+		x = random(0, self.raster.shape[0])
+		if isGoal:
+			return (x, 0)
+		else:
+			return (x, self.raster.shape[1])
+
 class Obstacle:
 
 	def __init__(self, xPos, yPos, width, height):
