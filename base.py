@@ -34,9 +34,17 @@ def simGeneration():
 	pop.Epoch()
 	
 def evaluate(net, graph):
+	timeTaken = 0
 	#make unit
 	u = un.Unit(net, graph.start)
 
 	while !u.simulate(graph):
 		#todo: render window
 		sleep(0.1)
+		timeTaken += 1
+		
+		#keep simulation time to a minimum
+		if timeTaken > 1000:
+			return 0
+
+	return (1 / timeTaken)

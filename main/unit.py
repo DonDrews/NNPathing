@@ -40,8 +40,16 @@ class Unit:
 		net.Activate()
 		outputs = net.Output()
 
-		#determine direction
-		
+		#move if necessary
+		movement = dir.getDirection(outputs[0], outputs[1])
+		if movement != -1:
+			self.move(graph, movement)
+
+		#check for completion
+		if (self.x, self.y) == graph.goal:
+			return True
+		else
+			return False
 
 
 	def move(self, graph, move):

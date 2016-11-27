@@ -26,3 +26,23 @@ def getPosDir(pos, dir, magnitude):
 def getDist(pos1, pos2):
 	return (abs(pos1[0] - pos2[0]) + abs(pos1[1] - pos2[1]))
 
+def getDirection(x, y):
+	#returns cardinal direction based on x and y vector
+	highest = 0.5
+	direction = -1
+
+	if abs(x) > highest:
+		highest = abs(x)
+		if x < 0:
+			direction = WEST
+		else:
+			direction = EAST
+
+	if abs(y) > highest:
+		highest = abs(y)
+		if y < 0:
+			direction = SOUTH
+		else:
+			direction = NORTH
+
+	return direction
