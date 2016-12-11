@@ -2,6 +2,8 @@ import MultiNEAT as NEAT
 import gui.render as rn
 import main.unit as un
 import main.map as mp
+import random
+import time
 
 window = rn.Window()
 params = NEAT.Parameters()
@@ -17,7 +19,7 @@ params.PopulationSize = 100
 #1 y movement
 
 genome = NEAT.Genome(0, 8, 0, 2, False, NEAT.ActivationFunction.SIGNED_SIGMOID, NEAT.ActivationFunction.SIGNED_SIGMOID, 0, params)
-pop = NEAT.Population(genome, params, True, 1.0)
+pop = NEAT.Population(genome, params, True, 1.0, random.random())
 
 def simGeneration():
 	genomeList = NEAT.GetGenomeList(pop)
@@ -38,9 +40,9 @@ def evaluate(net, graph):
 	#make unit
 	u = un.Unit(net, graph.start)
 
-	while !u.simulate(graph):
-		#todo: render window
-		sleep(0.1)
+	while u.simulate(graph) == False:
+		window.update(graph)
+		time.sleep(1)
 		timeTaken += 1
 		
 		#keep simulation time to a minimum
@@ -48,3 +50,6 @@ def evaluate(net, graph):
 			return 0
 
 	return (1 / timeTaken)
+
+for i in range(50):
+	simGeneration()

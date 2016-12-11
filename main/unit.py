@@ -1,6 +1,12 @@
-import dir
+from . import dir
 import math
-import map
+
+#utility function
+def convertToNet(x):
+        if x < 0.5:
+                return 1
+        else:
+                return (1 / x)
 
 #each net tested is converted into a unit for evaluation
 class Unit:
@@ -16,10 +22,10 @@ class Unit:
 		for i in range(4):
 			dist = 0
 			while True:
-				if dir.getPosDir(self.pos, i, dist) != 0:
+				if dir.getPosDir((self.x, self.y), i, dist) != 0:
 					break
 				dist += 1
-			distances[i] = net.convertToNet(dist)
+			distances[i] = convertToNet(dist)
 
 		#find goal x and y relative to unit
 		diffX = graph.goal[0] - self.x
@@ -36,9 +42,9 @@ class Unit:
 		inputs.append(1.0) #bias
 
 		#simulate in neural net
-		net.Input(inputs)
-		net.Activate()
-		outputs = net.Output()
+		self.net.Input(inputs)
+		self.net.Activate()
+		outputs = self.net.Output()
 
 		#move if necessary
 		movement = dir.getDirection(outputs[0], outputs[1])
@@ -48,22 +54,22 @@ class Unit:
 		#check for completion
 		if (self.x, self.y) == graph.goal:
 			return True
-		else
+		else:
 			return False
 
 
 	def move(self, graph, move):
-		newPos = dir.getPosAdjacent(self.pos, move)
+		newPos = dir.getPosAdjacent((self.x, self.y), move)
 
 		#check for moving out of bounds
 		if newPos[0] < 0 or newPos[1] < 0:
 			return False
 
-		if newPos[0] > graph.shape[0] or newPos[1] > graph.shape[1]:
+		if newPos[0] >= graph.raster.shape[0] or newPos[1] >= graph.raster.shape[1]:
 			return False
 
 		#check if moving into wall
-		if graph[newPos[0]][newPos[1]] != map.FLOOR:
+		if graph.raster[newPos[0]][newPos[1]] != graph.FLOOR:
 			return False
 
 		self.x = newPos[0]
